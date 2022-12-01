@@ -26,7 +26,7 @@ jobs:
         run: nuget restore AspnetMvc48.sln
       
       - name: Build
-        run: msbuild AspnetMvc48.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=${{ github.workspace }}\publish /p:PrecompileBeforePublish=true /p:EnableUpdateable=false
+        run: msbuild AspnetMvc48.sln /p:Configuration=Release /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=${{ github.workspace }}\publish /p:PrecompileBeforePublish=true /p:EnableUpdateable=false
         
       - name: Zip
         run: compress-archive ${{ github.workspace }}\publish\* ${{ github.workspace }}\app.zip
@@ -36,3 +36,18 @@ jobs:
         with:
           name: app
           path: ${{ github.workspace }}\app.zip
+
+  deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Download app
+        uses: actions/download-artifact@v3
+        with:
+          name: app
+          
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: "app-eru-netframework-mvc"
+          publish-profile: ${{ secrets.AZURE_APP_SERVICE_PUBLISH_PROFILE }}
+          package: ${{ github.workspace }}\app.zip
