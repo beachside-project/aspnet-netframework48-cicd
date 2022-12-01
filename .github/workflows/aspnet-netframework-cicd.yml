@@ -26,4 +26,4 @@ jobs:
         run: nuget restore AspnetMvc48.sln
       
       - name: Build
-        run: msbuild AspnetMvc48.sln
+        run: msbuild AspnetMvc48.sln /p:Configuration=Release
