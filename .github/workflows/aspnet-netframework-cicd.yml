@@ -26,4 +26,13 @@ jobs:
         run: nuget restore AspnetMvc48.sln
       
       - name: Build
-        run: msbuild AspnetMvc48.sln /p:Configuration=Release
+        run: msbuild AspnetMvc48.sln /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl="publish" /p:PrecompileBeforePublish=true /p:EnableUpdateable=false
+        
+      - name: Zip
+        run: compress-archive publish\* app.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: aspnet-mvc-dotnetframework48\app.zip
