@@ -23,7 +23,7 @@ jobs:
         uses: nuget/setup-nuget@v1
         
       - name: Restore NuGet packages
-        run: nuget resotre AspnetMvc48.sln
+        run: nuget restore AspnetMvc48.sln
       
       - name: Build
         run: msbuild AspnetMvc48.sln
